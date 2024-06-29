@@ -88,4 +88,45 @@ class LoginTest extends TestCase
                 'errors' => ['password']
             ]);
     }
+
+    #[Test]
+    public function email_must_be_valid_email(): void
+    {
+        $credentials = [
+            'email' => 'test',
+            'password' => 'password'
+        ];
+
+        $response = $this->postJson('/api/v1/login', $credentials);
+
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'message',
+                'errors' => ['email']
+            ]);
+    }
+
+    #[Test]
+    public function password_must_be_at_least_4_characters(): void
+    {
+        $credentials = [
+            'email' => 'XXXXXXXXXXXXXXXXXXXX',
+            'password' => 'ab'
+        ];
+
+        $response = $this->postJson('/api/v1/login', $credentials);
+
+        dd($response->json());
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'message',
+                'errors' => ['password']
+            ]);
+    }
 }
