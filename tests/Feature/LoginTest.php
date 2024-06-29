@@ -20,15 +20,18 @@ class LoginTest extends TestCase
     #[Test]
     public function an_existing_user_can_login(): void
     {
-        // $this->withoutExceptionHandling();
         $credentials = [
             'email' => 'test@test.com',
             'password' => 'password'
         ];
         $response = $this->postJson("api/v1/login", $credentials);
         $response->assertStatus(200)
-            ->assertJsonStructure(['data' => ['token']]);
-        dd($response->json());
+            ->assertJsonStructure([
+                'data' => ['token', 'token_type', 'expires_in'],
+                'status',
+                'message',
+                'errors'
+            ]);
     }
 
     #[Test]
@@ -41,8 +44,13 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        $response->assertStatus(200)
-            ->assertJsonStructure(['token']);
+        $response->assertStatus(status: 401)
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'message',
+                'errors'
+            ]);
     }
 
     #[Test]
@@ -54,8 +62,13 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        $response->assertStatus(200)
-            ->assertJsonStructure(['token']);
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'message',
+                'errors' => ['email']
+            ]);
     }
 
     #[Test]
@@ -67,7 +80,12 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        $response->assertStatus(200)
-            ->assertJsonStructure(['token']);
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'message',
+                'errors' => ['password']
+            ]);
     }
 }

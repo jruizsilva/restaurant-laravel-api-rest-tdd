@@ -9,10 +9,14 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:4'
+        ]);
+        $credentials = $request->only('email', 'password');
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return jsonResponse(status: 401, message: 'Credenciales incorrectas');
         }
 
         // return $this->respondWithToken($token);
