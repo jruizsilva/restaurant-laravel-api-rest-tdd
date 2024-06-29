@@ -20,14 +20,15 @@ class LoginTest extends TestCase
     #[Test]
     public function an_existing_user_can_login(): void
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
         $credentials = [
             'email' => 'test@test.com',
             'password' => 'password'
         ];
         $response = $this->postJson("api/v1/login", $credentials);
         $response->assertStatus(200)
-            ->assertJsonStructure(['data']); //todo
+            ->assertJsonStructure(['data' => ['token']]);
+        dd($response->json());
     }
 
     #[Test]
