@@ -55,6 +55,28 @@ class RegisterTest extends TestCase
     }
 
     #[Test]
+    public function a_user_can_register_and_login(): void
+    {
+        $credentials = [
+            'email' => 'user@user.com',
+            'password' => 'password',
+            'name' => 'Name 2',
+            'last_name' => 'Last Name 2',
+        ];
+
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('users', 2);
+        $response = $this->postJson('api/v1/login', [
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['data' => ['token']]);
+    }
+
+    #[Test]
     public function a_user_cannot_register_with_an_existing_email(): void
     {
         $credentials = [
