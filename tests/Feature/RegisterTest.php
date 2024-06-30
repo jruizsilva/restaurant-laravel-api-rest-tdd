@@ -152,4 +152,33 @@ class RegisterTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('email');
     }
+
+    #[Test]
+    public function name_must_be_at_least_2_characters()
+    {
+        $credentials = [
+            'email' => 'abc@gmail.com',
+            'password' => '1234',
+            'name' => '1'
+        ];
+
+        $response = $this->postJson('/api/v1/users', $credentials);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+    }
+
+    #[Test]
+    public function last_name_must_be_at_least_2_characters(): void
+    {
+        $credentials = [
+            'email' => 'abc@gmail.com',
+            'password' => '1234',
+            'name' => 'Test',
+            'last_name' => '1'
+        ];
+        $response = $this->postJson('/api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('last_name');
+    }
 }
