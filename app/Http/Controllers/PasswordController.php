@@ -10,12 +10,10 @@ class PasswordController extends Controller
 {
     public function update(UpdatePasswordRequest $request)
     {
-        $user = Auth::user();
-        $user->update([
+        Auth::user()->update([
             'password' => bcrypt($request->password)
         ]);
-        $user->refresh();
 
-        return jsonResponse($user);
+        return jsonResponse();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CheckPasswordRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +24,7 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_password' => 'required|min:4',
+            'current_password' => ['required', 'min:4', new CheckPasswordRule()],
             'password' => 'required|min:4',
             'password_confirmation' => 'required|same:password'
         ];

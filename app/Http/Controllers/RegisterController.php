@@ -10,7 +10,9 @@ class RegisterController extends Controller
 {
     public function store(RegisterRequest $request)
     {
-        $user = User::create($request->validated());
+        $data = $request->validated();
+        $data["password"] = bcrypt($data["password"]);
+        $user = User::create($data);
 
         return jsonResponse($user, 201, "User created");
     }

@@ -34,19 +34,19 @@ class UpdatePasswordTest extends TestCase
         $this->assertTrue(Hash::check('newpassword', auth()->user()->password));
     }
 
-    // #[Test]
-    // public function user_password_cannot_change_with_wrong_current_password(): void
-    // {
-    //     $data = [
-    //         'current_password' => 'wrongpassword',
-    //         'password' => 'newpassword',
-    //         'password_confirmation' => 'newpassword'
-    //     ];
+    #[Test]
+    public function user_password_cannot_change_with_wrong_current_password(): void
+    {
+        $data = [
+            'current_password' => 'wrongpassword',
+            'password' => 'newpassword',
+            'password_confirmation' => 'newpassword'
+        ];
 
-    //     $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
-    //     $response->assertStatus(422);
-    //     $response->assertJsonValidationErrors('current_password');
-    // }
+        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('current_password');
+    }
 
     #[Test]
     public function user_password_cannot_change_with_wrong_password_confirmation(): void
