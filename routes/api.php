@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::get('hello-world', function () {
     return response()->json([
@@ -30,4 +29,8 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(ProfileController::class)->group(function () {
     Route::put('profile', 'update');
+});
+
+Route::controller(PasswordController::class)->group(function () {
+    Route::put('password', 'update');
 });
