@@ -26,8 +26,16 @@ class UpdateUserDataTest extends TestCase
             'last_name' => 'Last Name changed'
         ];
         $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
-        dd($response->json());
+        $responseData = $response->json('data');
         $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'data' => [
+                ...$responseData,
+                'name' => 'Name changed',
+                'last_name' => 'Last Name changed',
+            ]
+        ]);
+        
         $this->assertDatabaseHas('users', [
             'name' => 'Name changed',
             'last_name' => 'Last Name changed'

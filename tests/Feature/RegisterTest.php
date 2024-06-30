@@ -34,12 +34,11 @@ class RegisterTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonFragment([
             'data' => [
+                ...$responseData,
                 'id' => 2,
                 'email' => 'email@email.com',
                 'name' => 'Name 1',
                 'last_name' => 'Last Name 1',
-                'created_at' => $responseData['created_at'],
-                'updated_at' => $responseData['updated_at'],
             ],
         ]);
         $this->assertDatabaseCount('users', 2);

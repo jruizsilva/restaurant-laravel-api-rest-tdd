@@ -13,7 +13,8 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         $user->update($request->all());
+        $user = $user->fresh();
 
-        return jsonResponse();
+        return jsonResponse($user);
     }
 }
