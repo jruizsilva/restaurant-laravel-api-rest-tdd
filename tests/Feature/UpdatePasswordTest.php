@@ -48,19 +48,19 @@ class UpdatePasswordTest extends TestCase
     //     $response->assertJsonValidationErrors('current_password');
     // }
 
-    // #[Test]
-    // public function user_password_cannot_change_with_wrong_password_confirmation(): void
-    // {
-    //     $data = [
-    //         'current_password' => 'password',
-    //         'password' => 'newpassword',
-    //         'password_confirmation' => 'wrongpassword'
-    //     ];
+    #[Test]
+    public function user_password_cannot_change_with_wrong_password_confirmation(): void
+    {
+        $data = [
+            'current_password' => 'password',
+            'password' => 'newpassword',
+            'password_confirmation' => 'wrongpassword'
+        ];
 
-    //     $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
-    //     $response->assertStatus(422);
-    //     $response->assertJsonValidationErrors('password');
-    // }
+        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('password_confirmation');
+    }
 
     #[Test]
     public function current_password_is_required(): void
