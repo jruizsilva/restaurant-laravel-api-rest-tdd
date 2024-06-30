@@ -50,4 +50,70 @@ class RegisterTest extends TestCase
             'last_name' => 'Last Name 1',
         ]);
     }
+
+    #[Test]
+    public function field_name_is_required()
+    {
+        $credentials = [
+            'email' => 'email@gmail.com',
+            'password' => 'password',
+            'last_name' => 'Last Name 1',
+        ];
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+    }
+
+    #[Test]
+    public function field_last_name_is_required()
+    {
+        $credentials = [
+            'email' => 'email@gmail.com',
+            'name' => 'Name 1',
+            'password' => 'password',
+        ];
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('last_name');
+    }
+
+    #[Test]
+    public function field_email_is_required()
+    {
+        $credentials = [
+            'name' => 'Name 1',
+            'last_name' => 'Last Name 1',
+            'password' => 'password',
+        ];
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
+    }
+
+    #[Test]
+    public function field_password_is_required()
+    {
+        $credentials = [
+            'email' => 'email@gmail.com',
+            'name' => 'Name 1',
+            'last_name' => 'Last Name 1',
+        ];
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('password');
+    }
+
+    #[Test]
+    public function email_must_be_valid()
+    {
+        $credentials = [
+            'email' => 'invalid-email',
+            'name' => 'Name 1',
+            'last_name' => 'Last Name 1',
+            'password' => 'password',
+        ];
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
+    }
 }

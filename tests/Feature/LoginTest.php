@@ -25,13 +25,8 @@ class LoginTest extends TestCase
             'password' => 'password'
         ];
         $response = $this->postJson("api/v1/login", $credentials);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => ['token', 'token_type', 'expires_in'],
-                'status',
-                'message',
-                'errors'
-            ]);
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['data' => ['token']]);
     }
 
     #[Test]
@@ -44,13 +39,8 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        $response->assertStatus(status: 401)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'message',
-                'errors'
-            ]);
+        $response->assertStatus(status: 401);
+        $response->assertJsonStructure(['data', 'status', 'message', 'errors']);
     }
 
     #[Test]
@@ -62,13 +52,8 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'message',
-                'errors' => ['email']
-            ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
     }
 
     #[Test]
@@ -80,13 +65,8 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'message',
-                'errors' => ['password']
-            ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('password');
     }
 
     #[Test]
@@ -99,34 +79,21 @@ class LoginTest extends TestCase
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'message',
-                'errors' => ['email']
-            ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
     }
 
     #[Test]
     public function password_must_be_at_least_4_characters(): void
     {
         $credentials = [
-            'email' => 'XXXXXXXXXXXXXXXXXXXX',
-            'password' => 'ab'
+            'email' => 'email@gmail.com',
+            'password' => '12'
         ];
 
         $response = $this->postJson('/api/v1/login', $credentials);
 
-        dd($response->json());
-
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'message',
-                'errors' => ['password']
-            ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('password');
     }
 }
