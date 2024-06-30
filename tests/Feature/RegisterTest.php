@@ -11,6 +11,17 @@ use Tests\TestCase;
 class RegisterTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        User::factory()->create([
+            'email' => 'example@example.com',
+            'name' => 'Name',
+            'last_name' => 'Last Name',
+        ]);
+    }
+
     #[Test]
     public function a_user_can_register(): void
     {
@@ -25,17 +36,9 @@ class RegisterTest extends TestCase
         $responseData = $response->json('data');
 
         $response->assertStatus(201);
-        $response->assertJsonStructure([
-            'data' => [
-                'id',
-                'email',
-                'name',
-                'last_name',
-            ],
-        ]);
         $response->assertJsonFragment([
             'data' => [
-                'id' => 1,
+                'id' => 2,
                 'email' => 'email@email.com',
                 'name' => 'Name 1',
                 'last_name' => 'Last Name 1',
@@ -43,12 +46,27 @@ class RegisterTest extends TestCase
                 'updated_at' => $responseData['updated_at'],
             ],
         ]);
-        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseCount('users', 2);
         $this->assertDatabaseHas('users', [
             'email' => 'email@email.com',
             'name' => 'Name 1',
             'last_name' => 'Last Name 1',
         ]);
+    }
+
+    #[Test]
+    public function a_user_cannot_register_with_an_existing_email(): void
+    {
+        $credentials = [
+            'email' => 'example@example.com',
+            'password' => 'password',
+            'name' => 'Name 1',
+            'last_name' => 'Last Name 1',
+        ];
+
+        $response = $this->postJson('api/v1/users', $credentials);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
     }
 
     #[Test]
