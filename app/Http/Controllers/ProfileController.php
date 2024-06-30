@@ -12,7 +12,7 @@ class ProfileController extends Controller
     public function update(UpdateUserRequest $request)
     {
         $user = auth()->user();
-        $user->update($request->all());
+        $user->update($request->validated());
         $user = $user->fresh();
 
         return jsonResponse($user);

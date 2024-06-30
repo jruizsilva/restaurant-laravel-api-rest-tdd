@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -62,11 +63,10 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Example',
             'last_name' => 'Example',
         ];
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $user = User::find(1);
+        $response = $this->apiAs($user, 'put', 'api/v1/profile', $data);
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('users', [
-            'password' => 'newpassword'
-        ]);
+        $this->assertFalse(Hash::check('newpassword', $user->password));
     }
 
     #[Test]
