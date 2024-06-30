@@ -21,7 +21,7 @@ class LoginTest extends TestCase
     public function an_existing_user_can_login(): void
     {
         $credentials = [
-            'email' => 'test@test.com',
+            'email' => 'example@example.com',
             'password' => 'password'
         ];
         $response = $this->postJson("api/v1/login", $credentials);

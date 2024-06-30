@@ -2,23 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:4',
-        ]);
-
-        // Create a new user
-
-        $user = User::create($request->all());
+        $user = User::create($request->validated());
 
         return jsonResponse($user, 201, "User created");
     }
