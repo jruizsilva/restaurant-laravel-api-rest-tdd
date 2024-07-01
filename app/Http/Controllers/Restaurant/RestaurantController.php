@@ -16,7 +16,8 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        //
+        $restaurants = Auth::user()->restaurants()->get();
+        return jsonResponse($restaurants);
     }
 
     /**
@@ -54,6 +55,6 @@ class RestaurantController extends Controller
     {
         Gate::authorize("delete", $restaurant);
         $restaurant->delete();
-        return jsonResponse(null, 204);
+        return response()->noContent();
     }
 }
