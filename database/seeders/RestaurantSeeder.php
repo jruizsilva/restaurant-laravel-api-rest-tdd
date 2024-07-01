@@ -13,11 +13,17 @@ class RestaurantSeeder extends Seeder
      */
     public function run(): void
     {
-        Restaurant::factory()->count(10)->create([
-            'user_id' => 1,
-        ]);
-        Restaurant::factory()->count(10)->create([
-            'user_id' => 2,
-        ]);
+        for ($i = 1; $i <= 10; $i++) {
+            Restaurant::factory()->create([
+                'user_id' => 1,
+                'name' => 'Restaurant ' . $i
+            ]);
+        }
+        for ($i = 1; $i <= 10; $i++) {
+            Restaurant::factory()->create([
+                'user_id' => 2,
+                'name' => 'Restaurant ' . $i
+            ]);
+        }
     }
 }

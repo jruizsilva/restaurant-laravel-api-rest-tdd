@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Restaurant;
 use App\Models\User;
 use Database\Seeders\RestaurantSeeder;
 use Database\Seeders\UserSeeder;
@@ -46,8 +47,25 @@ class EditRestaurantTest extends TestCase
             'description' => 'New Restaurant Description',
         ];
         $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $responseData = $response->json('data');
         $response->assertStatus(200);
-        $response->assertJsonStructure(['slug']);
+        $response->assertJsonStructure(['data' => ['slug']]);
+        $this->assertStringContainsString('new-restaurant-name', $responseData['slug']);
+    }
+
+    #[Test]
+    public function slug_must_not_change_if_name_is_the_same_name(): void
+    {
+        $data = [
+            'name' => 'Restaurant 1',
+            'description' => 'New Restaurant Description',
+        ];
+        $restaurant = Restaurant::find(1);
+        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $responseData = $response->json('data');
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['data' => ['slug']]);
+        $this->assertTrue($restaurant->slug === $responseData['slug']);
     }
 
     #[Test]
@@ -132,7 +150,7 @@ class EditRestaurantTest extends TestCase
     public function name_must_have_at_most_100_characters(): void
     {
         $data = [
-            'name' => str_repeat('a', 100),
+            'name' => str_repeat('a', 101),
             'description' => 'New Restaurant Description',
         ];
         $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
