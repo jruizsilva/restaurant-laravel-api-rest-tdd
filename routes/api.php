@@ -36,4 +36,4 @@ Route::controller(ResetPasswordController::class)->group(function () {
     Route::put('reset-password', 'resetPassword');
 });
 
-Route::apiResource('restaurants', RestaurantController::class);
+Route::apiResource('restaurants', RestaurantController::class)->middleware('auth:api');

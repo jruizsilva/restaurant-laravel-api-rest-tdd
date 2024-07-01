@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
+use Gate;
 use Illuminate\Support\Facades\Auth;
 
 class RestaurantController extends Controller
@@ -41,7 +42,9 @@ class RestaurantController extends Controller
      */
     public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
-        //
+        Gate::authorize("update", $restaurant);
+        $restaurant->update($request->validated());
+        return jsonResponse($restaurant, 200);
     }
 
     /**

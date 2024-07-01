@@ -18,5 +18,10 @@ class UserSeeder extends Seeder
             'last_name' => 'Example',
             'email' => 'example@example.com',
         ]);
+        User::factory()->create([
+            'name' => 'Example2',
+            'last_name' => 'Example2',
+            'email' => 'example2@example.com',
+        ]);
     }
 }

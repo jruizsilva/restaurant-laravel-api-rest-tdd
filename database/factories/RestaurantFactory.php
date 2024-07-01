@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,12 @@ class RestaurantFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->company();
         return [
-            //
+            'name' => $name . "-" . uniqid(),
+            'slug' => str()->slug($name),
+            'description' => fake()->text(100),
+            'user_id' => User::factory()->create(),
         ];
     }
 }
