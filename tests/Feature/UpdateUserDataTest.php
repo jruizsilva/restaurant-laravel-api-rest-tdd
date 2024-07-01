@@ -36,7 +36,7 @@ class UpdateUserDataTest extends TestCase
                 'last_name' => 'Last Name changed',
             ]
         ]);
-        
+
         $this->assertDatabaseHas('users', [
             'name' => 'Name changed',
             'last_name' => 'Last Name changed'
@@ -57,7 +57,8 @@ class UpdateUserDataTest extends TestCase
         ]);
     }
     #[Test]
-    public function an_authenticated_user_cannot_modify_their_password(): void{
+    public function an_authenticated_user_cannot_modify_their_password(): void
+    {
         $data = [
             'password' => 'newpassword',
             'name' => 'Example',

@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('hello-world', function () {
@@ -21,16 +22,15 @@ Route::controller(LoginController::class)->group(function () {
     Route::post("login", 'login');
 });
 
-Route::controller(AuthController::class)->group(function () {
-    Route::post("logout", 'logout');
-    Route::post("refresh", 'refresh');
-    Route::post("me", 'me');
-});
-
 Route::controller(ProfileController::class)->group(function () {
     Route::put('profile', 'update');
 });
 
 Route::controller(PasswordController::class)->group(function () {
     Route::put('password', 'update');
+});
+
+Route::controller(ResetPasswordController::class)->group(function () {
+    Route::post('forgot-password', 'sendResetLinkEmail');
+    Route::put('reset-password', 'resetPassword');
 });
