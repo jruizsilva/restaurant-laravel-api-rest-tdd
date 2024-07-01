@@ -43,4 +43,54 @@ class RestaurantTest extends TestCase
         $this->assertDatabaseCount('restaurants', 1);
         $this->assertStringContainsString('test-restaurant', $responseData['slug']);
     }
+
+    #[Test]
+    public function field_name_is_required()
+    {
+        $data = [
+            'description' => 'This is a test restaurant',
+        ];
+        $response = $this->apiAs(User::find(1), 'post', 'api/v1/restaurants', $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+    }
+
+    #[Test]
+    public function name_must_be_at_least_4_characters()
+    {
+        $data = [
+            'name' => 'Tes',
+            'description' => 'This is a test restaurant',
+        ];
+
+        $response = $this->apiAs(User::find(1), 'post', 'api/v1/restaurants', $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+    }
+
+    #[Test]
+    public function field_description_is_required()
+    {
+        $data = [
+            'name' => 'Test name',
+        ];
+        $response = $this->apiAs(User::find(1), 'post', 'api/v1/restaurants', $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('description');
+    }
+
+    #[Test]
+    public function description_must_be_at_least_4_characters()
+    {
+        $data = [
+            'name' => 'Test name',
+            'description' => 'Th3',
+        ];
+
+        $response = $this->apiAs(User::find(1), 'post', 'api/v1/restaurants', $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('description');
+    }
 }
