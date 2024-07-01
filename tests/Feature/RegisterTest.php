@@ -153,6 +153,26 @@ class RegisterTest extends TestCase
     }
 
     #[Test]
+    public function email_must_be_unique(): void
+    {
+        # teniendo
+        $data = [
+            'email' => 'example@example.com',
+            'password' => 'password',
+            'name' => 'example',
+            'last_name' => 'example example',
+        ];
+
+        # haciendo
+        $response = $this->postJson("api/v1/users", $data);
+
+        #esperando
+        $response->assertStatus(422);
+        $response->assertJsonStructure(['message', 'data', 'status', 'errors' => ['email']]);
+        $response->assertJsonFragment(['errors' => ['email' => ['The email has already been taken.']]]);
+    }
+
+    #[Test]
     public function name_must_be_at_least_2_characters()
     {
         $credentials = [
