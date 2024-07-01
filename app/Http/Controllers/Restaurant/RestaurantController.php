@@ -52,6 +52,8 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
-        //
+        Gate::authorize("delete", $restaurant);
+        $restaurant->delete();
+        return jsonResponse(null, 204);
     }
 }
