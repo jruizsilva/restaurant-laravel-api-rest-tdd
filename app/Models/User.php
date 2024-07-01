@@ -43,6 +43,11 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function restaurants()
+    {
+        return $this->hasMany(Restaurant::class);
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $url = "http://frontendurl.com/reset-password?token=$token&email={$this->email}";

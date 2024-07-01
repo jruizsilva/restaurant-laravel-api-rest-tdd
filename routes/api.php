@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Restaurant\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('hello-world', function () {
@@ -34,3 +35,5 @@ Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('forgot-password', 'sendResetLinkEmail');
     Route::put('reset-password', 'resetPassword');
 });
+
+Route::apiResource('restaurants', RestaurantController::class);
