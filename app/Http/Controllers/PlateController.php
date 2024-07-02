@@ -20,9 +20,11 @@ class PlateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePlateRequest $request)
+    public function store(StorePlateRequest $request, Restaurant $restaurant)
     {
-        //
+        Gate::authorize('addPlate', $restaurant);
+        $plate = $restaurant->plates()->create($request->validated());
+        return jsonResponse($plate, 201);
     }
 
     /**
