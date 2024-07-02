@@ -22,7 +22,7 @@ class RestaurantFactory extends Factory
             'name' => $name . "-" . uniqid(),
             'slug' => str()->slug($name),
             'description' => fake()->text(100),
-            'user_id' => User::factory()->create(),
+            'user_id' => fn() => User::factory()->create()->id,
         ];
     }
 }
