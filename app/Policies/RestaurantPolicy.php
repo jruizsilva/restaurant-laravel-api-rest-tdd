@@ -50,6 +50,11 @@ class RestaurantPolicy
         return $user->id === $restaurant->user_id;
     }
 
+    public function editPlate(User $user, Restaurant $restaurant): bool
+    {
+        return $user->id === $restaurant->user_id;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

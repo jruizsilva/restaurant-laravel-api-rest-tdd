@@ -38,9 +38,11 @@ class PlateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePlateRequest $request, Plate $plate)
+    public function update(UpdatePlateRequest $request, Restaurant $restaurant, Plate $plate)
     {
-        //
+        Gate::authorize('editPlate', $restaurant);
+        $plate->update($request->validated());
+        return jsonResponse($plate);
     }
 
     /**
