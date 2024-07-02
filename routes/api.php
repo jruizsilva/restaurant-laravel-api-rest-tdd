@@ -40,5 +40,7 @@ Route::controller(ResetPasswordController::class)->group(function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('restaurants', RestaurantController::class);
-    Route::apiResource('restaurants/{restaurant}/plates', PlateController::class);
+    Route:: as('restaurant.')->group(function () {
+        Route::apiResource('restaurants/{restaurant:id}/plates', PlateController::class);
+    });
 });
