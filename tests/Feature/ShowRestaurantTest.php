@@ -25,6 +25,7 @@ class ShowRestaurantTest extends TestCase
     {
         $response = $this->actingAs(User::find(1))->getJson("api/v1/restaurants/1");
         $response->assertStatus(200);
+        $response->assertJsonPath('status', 200);
     }
 
     #[Test]
@@ -32,6 +33,7 @@ class ShowRestaurantTest extends TestCase
     {
         $response = $this->actingAs(User::find(1))->getJson("api/v1/restaurants/11");
         $response->assertStatus(401);
+        $response->assertJsonPath('status', 401);
     }
 
     #[Test]
@@ -39,14 +41,15 @@ class ShowRestaurantTest extends TestCase
     {
         $response = $this->getJson("api/v1/restaurants/1");
         $response->assertStatus(401);
+        $response->assertJsonPath('status', 401);
     }
 
     #[Test]
     public function throw_an_exception_if_the_restaurant_does_not_exist(): void
     {
         $response = $this->actingAs(User::find(1))->getJson("api/v1/restaurants/100");
-        dd($response->json());
         $response->assertStatus(404);
+        $response->assertJsonPath('status', 404);
     }
 
 }

@@ -29,4 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (NotFoundHttpException $exception) {
             return jsonResponse(status: 404, message: $exception->getMessage());
         });
+        $exceptions->render(function (AuthenticationException $exception) {
+            return jsonResponse(status: 401, message: $exception->getMessage());
+        });
     })->create();
