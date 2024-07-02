@@ -30,9 +30,11 @@ class PlateController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Plate $plate)
+    public function show(Restaurant $restaurant, Plate $plate)
     {
-        //
+        Gate::authorize('viewPlate', $restaurant);
+        $plate = $restaurant->plates()->findOrFail($plate->id);
+        return jsonResponse($plate);
     }
 
     /**
@@ -41,6 +43,7 @@ class PlateController extends Controller
     public function update(UpdatePlateRequest $request, Restaurant $restaurant, Plate $plate)
     {
         Gate::authorize('editPlate', $restaurant);
+        $plate = $restaurant->plates()->findOrFail($plate->id);
         $plate->update($request->validated());
         return jsonResponse($plate);
     }
@@ -48,8 +51,11 @@ class PlateController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Plate $plate)
+    public function destroy(Restaurant $restaurant, Plate $plate)
     {
-        //
+        Gate::authorize('deletePlate', $restaurant);
+        $plate = $restaurant->plates()->findOrFail($plate->id);
+        $plate->delete();
+        return jsonResponse();
     }
 }

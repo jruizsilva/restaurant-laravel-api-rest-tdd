@@ -143,4 +143,23 @@ class EditPlateTest extends TestCase
         $response->assertStatus(404);
         $response->assertJsonPath('status', 404);
     }
+
+    #[Test]
+    public function an_authenticated_user_cannot_edit_a_plate_that_does_not_belongs_to_his_restaurant()
+    {
+        $data = [
+            'name' => 'Plate 1 edited',
+            'description' => 'Description 1 edited',
+            'price' => 11.99
+        ];
+        $response = $this->actingAs($this->user)->putJson(
+            route('restaurant.plates.update', [
+                'restaurant' => $this->restaurant->id,
+                'plate' => $this->anotherPlate->id
+            ]),
+            $data
+        );
+        $response->assertStatus(404);
+        $response->assertJsonPath('status', 404);
+    }
 }

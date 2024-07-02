@@ -29,6 +29,11 @@ class RestaurantPolicy
         return $user->id === $restaurant->user_id;
     }
 
+    public function viewPlate(User $user, Restaurant $restaurant): bool
+    {
+        return $user->id === $restaurant->user_id;
+    }
+
     /**
      * Determine whether the user can create models.
      */
@@ -59,6 +64,11 @@ class RestaurantPolicy
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Restaurant $restaurant): bool
+    {
+        return $user->id === $restaurant->user_id;
+    }
+
+    public function deletePlate(User $user, Restaurant $restaurant): bool
     {
         return $user->id === $restaurant->user_id;
     }
