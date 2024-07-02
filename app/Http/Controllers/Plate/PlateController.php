@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Plate;
 
+use App\Http\Controllers\Controller;
 use App\Models\Plate;
 use App\Http\Requests\StorePlateRequest;
 use App\Http\Requests\UpdatePlateRequest;

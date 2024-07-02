@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\PlateController;
+use App\Http\Controllers\Plate\PlateController;
 use App\Http\Controllers\Restaurant\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
