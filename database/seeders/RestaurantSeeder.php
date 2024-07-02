@@ -15,7 +15,7 @@ class RestaurantSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             $name = 'Restaurant ' . $i;
-            $slug = str($name)->slug();
+            $slug = str($name)->slug() . "-" . uniqid();
             Restaurant::factory()->create([
                 'user_id' => 1,
                 'name' => $name,
@@ -24,7 +24,7 @@ class RestaurantSeeder extends Seeder
         }
         for ($i = 1; $i <= 10; $i++) {
             $name = 'Restaurant ' . $i;
-            $slug = str($name)->slug();
+            $slug = str($name)->slug() . "-" . uniqid();
             Restaurant::factory()->create([
                 'user_id' => 2,
                 'name' => $name,
