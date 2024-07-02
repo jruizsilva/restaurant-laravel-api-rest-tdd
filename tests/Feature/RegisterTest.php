@@ -30,18 +30,15 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/users', $credentials);
         $responseData = $response->json('data');
-
         $response->assertStatus(201);
-        $response->assertJsonFragment([
-            'data' => [
-                ...$responseData,
-                'id' => 2,
-                'email' => 'email@email.com',
-                'name' => 'Name 1',
-                'last_name' => 'Last Name 1',
-            ],
+        $response->assertJsonPath('data', [
+            ...$responseData,
+            'id' => 3,
+            'email' => 'email@email.com',
+            'name' => 'Name 1',
+            'last_name' => 'Last Name 1',
         ]);
-        $this->assertDatabaseCount('users', 2);
+        $this->assertDatabaseCount('users', 3);
         $this->assertDatabaseHas('users', [
             'email' => 'email@email.com',
             'name' => 'Name 1',
@@ -61,7 +58,7 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/users', $credentials);
         $response->assertStatus(201);
-        $this->assertDatabaseCount('users', 2);
+        $this->assertDatabaseCount('users', 3);
         $response = $this->postJson('api/v1/login', [
             'email' => $credentials['email'],
             'password' => $credentials['password'],

@@ -14,15 +14,21 @@ class RestaurantSeeder extends Seeder
     public function run(): void
     {
         for ($i = 1; $i <= 10; $i++) {
+            $name = 'Restaurant ' . $i;
+            $slug = str($name)->slug();
             Restaurant::factory()->create([
                 'user_id' => 1,
-                'name' => 'Restaurant ' . $i
+                'name' => $name,
+                'slug' => $slug
             ]);
         }
         for ($i = 1; $i <= 10; $i++) {
+            $name = 'Restaurant ' . $i;
+            $slug = str($name)->slug();
             Restaurant::factory()->create([
                 'user_id' => 2,
-                'name' => 'Restaurant ' . $i
+                'name' => $name,
+                'slug' => $slug
             ]);
         }
     }
