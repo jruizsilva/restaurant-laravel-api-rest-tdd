@@ -16,7 +16,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        $restaurants = Auth::user()->restaurants()->get();
+        $restaurants = Auth::user()->restaurants()->paginate();
         return jsonResponse($restaurants);
     }
 

@@ -24,15 +24,15 @@ class RestaurantListTest extends TestCase
     #[Test]
     public function a_user_can_see_their_restaurants(): void
     {
-        $response = $this->actingAs(User::find(1))->get(route("restaurants.index"));
-        $responseData = $response->json('data');
+        $response = $this->actingAs(User::find(2))->get(route("restaurants.index"));
+        $responseData = $response->json('data.data');
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'data' => [['name', 'description']]
+            'data' => ['data' => [['name', 'description']]]
         ]);
-        $response->assertJsonCount(10, 'data');
+        $response->assertJsonCount(15, 'data.data');
         foreach ($responseData as $restaurant) {
-            $this->assertEquals(1, $restaurant['user_id']);
+            $this->assertEquals(2, $restaurant['user_id']);
         }
     }
 
