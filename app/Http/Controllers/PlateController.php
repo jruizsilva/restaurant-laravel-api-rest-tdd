@@ -6,11 +6,13 @@ use App\Models\Plate;
 use App\Http\Requests\StorePlateRequest;
 use App\Http\Requests\UpdatePlateRequest;
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\Gate;
 
 class PlateController extends Controller
 {
     public function index(Restaurant $restaurant)
     {
+        Gate::authorize('viewPlates', $restaurant);
         $plates = $restaurant->plates()->paginate();
         return jsonResponse($plates);
     }

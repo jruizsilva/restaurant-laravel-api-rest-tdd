@@ -55,4 +55,11 @@ class PlateListTest extends TestCase
         $response = $this->getJson(route("restaurant.plates.index", ['restaurant' => 2]));
         $response->assertStatus(401);
     }
+
+    #[Test]
+    public function a_user_cannot_see_plates_of_a_restaurant_that_does_not_belong_to_him(): void
+    {
+        $response = $this->actingAs(User::find(1))->getJson(route("restaurant.plates.index", ['restaurant' => 11]));
+        $response->assertStatus(401);
+    }
 }
