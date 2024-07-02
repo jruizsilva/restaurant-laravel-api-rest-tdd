@@ -22,7 +22,7 @@ class RestaurantSeeder extends Seeder
                 'slug' => $slug
             ]);
         }
-        for ($i = 10; $i <= 160; $i++) {
+        for ($i = 10; $i <= 20; $i++) {
             $name = 'Restaurant ' . $i;
             $slug = str($name)->slug() . "-" . uniqid();
             Restaurant::factory()->create([

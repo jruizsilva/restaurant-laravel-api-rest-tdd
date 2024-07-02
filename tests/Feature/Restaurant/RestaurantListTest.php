@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Restaurant;
 
+use App\Models\Restaurant;
 use App\Models\User;
-use Database\Seeders\RestaurantSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,7 +18,15 @@ class RestaurantListTest extends TestCase
     {
         parent::setUp();
         $this->seed(UserSeeder::class);
-        $this->seed(RestaurantSeeder::class);
+        for ($i = 10; $i <= 160; $i++) {
+            $name = 'Restaurant ' . $i;
+            $slug = str($name)->slug() . "-" . uniqid();
+            Restaurant::factory()->create([
+                'user_id' => 2,
+                'name' => $name,
+                'slug' => $slug
+            ]);
+        }
     }
 
     #[Test]
