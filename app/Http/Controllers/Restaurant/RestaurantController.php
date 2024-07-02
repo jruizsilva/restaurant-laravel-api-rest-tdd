@@ -35,7 +35,8 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        //
+        Gate::authorize("view", $restaurant);
+        return jsonResponse($restaurant);
     }
 
     /**
