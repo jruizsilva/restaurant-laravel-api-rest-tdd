@@ -45,9 +45,15 @@ class CreateMenuTest extends TestCase
                 'restaurant' => $this->restaurant->id
             ]), $data);
 
-        dd($response->json());
-
         $response->assertStatus(201);
+        $response->assertJsonPath("data.restaurant.id", $this->restaurant->id);
+        $response->assertJsonPath("status", 201);
+        $response->assertJsonCount(3, 'data.plates');
+        $this->assertDatabaseHas('menus', [
+            'name' => 'Menu 1',
+            'description' => 'Description 1',
+            'restaurant_id' => $this->restaurant->id,
+        ]);
         foreach ($this->plates as $plate) {
             $this->assertDatabaseHas('menu_plate', [
                 'menu_id' => 1,

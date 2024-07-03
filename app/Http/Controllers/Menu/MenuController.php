@@ -27,6 +27,7 @@ class MenuController extends Controller
         Gate::authorize("addMenu", $restaurant);
         $menu = $restaurant->menus()->create($request->except("plates"));
         $menu->plates()->attach($request->plates);
+        $menu->load("restaurant", "plates");
         return jsonResponse($menu, 201);
     }
 
