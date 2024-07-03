@@ -5,24 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Restaurant extends Model
+class Menu extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function plates()
     {
-        return $this->hasMany(Plate::class);
+        return $this->belongsToMany(Plate::class);
     }
 
-    public function menus()
+    public function restaurant()
     {
-        return $this->hasMany(Menu::class);
+        return $this->belongsTo(Restaurant::class);
     }
 }

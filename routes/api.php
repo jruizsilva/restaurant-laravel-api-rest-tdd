@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\Plate\PlateController;
 use App\Http\Controllers\Restaurant\RestaurantController;
 use Illuminate\Support\Facades\Route;
@@ -37,5 +38,9 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('restaurants', RestaurantController::class);
     Route:: as('restaurant.')->group(function () {
         Route::apiResource('restaurants/{restaurant:id}/plates', PlateController::class);
+    });
+
+    Route:: as('restaurant.')->group(function () {
+        Route::apiResource('restaurants/{restaurant:id}/menus', MenuController::class);
     });
 });
