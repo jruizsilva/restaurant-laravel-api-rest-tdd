@@ -7,13 +7,11 @@ use App\Models\Plate;
 use App\Http\Requests\StorePlateRequest;
 use App\Http\Requests\UpdatePlateRequest;
 use App\Models\Restaurant;
-use Illuminate\Support\Facades\Gate;
 
 class PlateController extends Controller
 {
     public function index(Restaurant $restaurant)
     {
-        Gate::authorize('viewPlates', $restaurant);
         $plates = $restaurant->plates()->paginate();
         return jsonResponse($plates);
     }
@@ -23,7 +21,6 @@ class PlateController extends Controller
      */
     public function store(StorePlateRequest $request, Restaurant $restaurant)
     {
-        Gate::authorize('addPlate', $restaurant);
         $plate = $restaurant->plates()->create($request->validated());
         return jsonResponse($plate, 201);
     }
@@ -33,7 +30,6 @@ class PlateController extends Controller
      */
     public function show(Restaurant $restaurant, Plate $plate)
     {
-        Gate::authorize('viewPlate', $restaurant);
         $plate = $restaurant->plates()->findOrFail($plate->id);
         return jsonResponse($plate);
     }
@@ -43,7 +39,6 @@ class PlateController extends Controller
      */
     public function update(UpdatePlateRequest $request, Restaurant $restaurant, Plate $plate)
     {
-        Gate::authorize('editPlate', $restaurant);
         $plate = $restaurant->plates()->findOrFail($plate->id);
         $plate->update($request->validated());
         return jsonResponse($plate);
@@ -54,7 +49,6 @@ class PlateController extends Controller
      */
     public function destroy(Restaurant $restaurant, Plate $plate)
     {
-        Gate::authorize('deletePlate', $restaurant);
         $plate = $restaurant->plates()->findOrFail($plate->id);
         $plate->delete();
         return jsonResponse();

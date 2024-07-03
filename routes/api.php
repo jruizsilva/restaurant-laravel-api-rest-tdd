@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\Plate\PlateController;
 use App\Http\Controllers\Restaurant\RestaurantController;
+use App\Http\Middleware\RestaurantMustBelongsToTheAuthenticatedUser;
 use Illuminate\Support\Facades\Route;
 
 Route::get('hello-world', function () {
@@ -36,11 +37,9 @@ Route::middleware('auth:api')->group(function () {
         Route::put('user/password', [PasswordController::class, 'update'])->name('password.update');
     });
     Route::apiResource('restaurants', RestaurantController::class);
-    Route:: as('restaurant.')->group(function () {
-        Route::apiResource('restaurants/{restaurant:id}/plates', PlateController::class);
-    });
 
-    Route:: as('restaurant.')->group(function () {
+    Route::middleware(RestaurantMustBelongsToTheAuthenticatedUser::class)->as("restaurant.")->group(function () {
+        Route::apiResource('restaurants/{restaurant:id}/plates', PlateController::class);
         Route::apiResource('restaurants/{restaurant:id}/menus', MenuController::class);
     });
 });

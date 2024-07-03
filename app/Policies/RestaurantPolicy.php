@@ -16,30 +16,10 @@ class RestaurantPolicy
         //
     }
 
-    public function viewPlates(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
     /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function viewPlate(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function viewMenu(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function viewMenus(User $user, Restaurant $restaurant): bool
     {
         return $user->id === $restaurant->user_id;
     }
@@ -52,16 +32,6 @@ class RestaurantPolicy
         //
     }
 
-    public function addPlate(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function addMenu(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
     /**
      * Determine whether the user can update the model.
      */
@@ -70,30 +40,10 @@ class RestaurantPolicy
         return $user->id === $restaurant->user_id;
     }
 
-    public function editPlate(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function editMenu(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
     /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function deletePlate(User $user, Restaurant $restaurant): bool
-    {
-        return $user->id === $restaurant->user_id;
-    }
-
-    public function deleteMenu(User $user, Restaurant $restaurant): bool
     {
         return $user->id === $restaurant->user_id;
     }
