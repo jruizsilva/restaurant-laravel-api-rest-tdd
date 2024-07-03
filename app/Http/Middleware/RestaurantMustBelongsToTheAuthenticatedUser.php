@@ -15,7 +15,7 @@ class RestaurantMustBelongsToTheAuthenticatedUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $restaurant = $request->route('restaurant');
+        $restaurant = $request->route()->parameter('restaurant');
 
         if ($restaurant->user_id !== auth()->id()) {
             abort(401, 'You are not authorized');
