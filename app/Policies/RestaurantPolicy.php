@@ -83,6 +83,11 @@ class RestaurantPolicy
         return $user->id === $restaurant->user_id;
     }
 
+    public function deleteMenu(User $user, Restaurant $restaurant): bool
+    {
+        return $user->id === $restaurant->user_id;
+    }
+
     /**
      * Determine whether the user can restore the model.
      */
