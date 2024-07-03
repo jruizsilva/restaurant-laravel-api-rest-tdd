@@ -3,7 +3,6 @@
 namespace Tests\Feature\User;
 
 use App\Models\User;
-use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
@@ -30,7 +29,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Name changed',
             'last_name' => 'Last Name changed'
         ];
-        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
         $responseData = $response->json('data');
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -54,7 +53,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Example',
             'last_name' => 'Example',
         ];
-        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
         $response->assertStatus(200);
         $this->assertDatabaseMissing('users', [
             'email' => 'newemail@gmail.com'
@@ -69,7 +68,7 @@ class UpdateUserDataTest extends TestCase
             'last_name' => 'Example',
         ];
         $user = $this->user;
-        $response = $this->apiAs($user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
         $response->assertStatus(200);
         $this->assertFalse(Hash::check('newpassword', $user->password));
     }
@@ -80,7 +79,7 @@ class UpdateUserDataTest extends TestCase
         $data = [
             'last_name' => 'Last Name 1',
         ];
-        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
     }
@@ -91,7 +90,7 @@ class UpdateUserDataTest extends TestCase
         $data = [
             'name' => 'Name 1',
         ];
-        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('last_name');
     }
@@ -104,7 +103,7 @@ class UpdateUserDataTest extends TestCase
             'name' => '1'
         ];
 
-        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
@@ -117,7 +116,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Test',
             'last_name' => '1'
         ];
-        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
+        $response = $this->actingAs($this->user)->putJson(route('user.profile.update'), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('last_name');
     }

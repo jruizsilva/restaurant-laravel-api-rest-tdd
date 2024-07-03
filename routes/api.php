@@ -23,14 +23,6 @@ Route::controller(LoginController::class)->group(function () {
     Route::post("login", 'login');
 });
 
-Route::controller(ProfileController::class)->group(function () {
-    Route::put('profile', 'update');
-});
-
-Route::controller(PasswordController::class)->group(function () {
-    Route::put('password', 'update');
-});
-
 Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('forgot-password', 'sendResetLinkEmail');
     Route::put('reset-password', 'resetPassword');
@@ -38,6 +30,10 @@ Route::controller(ResetPasswordController::class)->group(function () {
 
 
 Route::middleware('auth:api')->group(function () {
+    Route:: as('user.')->group(function () {
+        Route::put('user/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('user/password', [PasswordController::class, 'update'])->name('password.update');
+    });
     Route::apiResource('restaurants', RestaurantController::class);
     Route:: as('restaurant.')->group(function () {
         Route::apiResource('restaurants/{restaurant:id}/plates', PlateController::class);
