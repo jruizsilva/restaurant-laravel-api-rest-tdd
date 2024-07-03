@@ -15,9 +15,11 @@ class MenuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Restaurant $restaurant)
     {
-        //
+        Gate::authorize("viewMenus", $restaurant);
+        $menus = $restaurant->menus()->paginate();
+        return jsonResponse($menus);
     }
 
     /**

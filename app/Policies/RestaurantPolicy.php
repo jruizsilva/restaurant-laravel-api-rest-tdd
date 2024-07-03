@@ -39,6 +39,11 @@ class RestaurantPolicy
         return $user->id === $restaurant->user_id;
     }
 
+    public function viewMenus(User $user, Restaurant $restaurant): bool
+    {
+        return $user->id === $restaurant->user_id;
+    }
+
     /**
      * Determine whether the user can create models.
      */

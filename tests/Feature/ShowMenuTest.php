@@ -6,9 +6,9 @@ use App\Models\Menu;
 use App\Models\Plate;
 use App\Models\Restaurant;
 use App\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ShowMenuTest extends TestCase
