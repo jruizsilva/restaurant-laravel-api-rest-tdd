@@ -13,18 +13,25 @@ use Tests\TestCase;
 class RestaurantListTest extends TestCase
 {
     use RefreshDatabase;
+    protected $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
-        for ($i = 10; $i <= 160; $i++) {
-            $name = 'Restaurant ' . $i;
-            $slug = str($name)->slug() . "-" . uniqid();
+        $this->user = User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
+        $this->anotherUser = User::factory()->create([
+            'name' => 'Another',
+            'last_name' => 'User',
+            'email' => 'another@example.com',
+        ]);
+        for ($i = 1; $i <= 150; $i++) {
             Restaurant::factory()->create([
-                'user_id' => 2,
-                'name' => $name,
-                'slug' => $slug
+                'user_id' => $this->user->id,
+                'name' => "Restaurant $i",
             ]);
         }
     }
@@ -32,7 +39,7 @@ class RestaurantListTest extends TestCase
     #[Test]
     public function a_user_can_see_their_restaurants(): void
     {
-        $response = $this->actingAs(User::find(2))->get(route("restaurants.index"));
+        $response = $this->actingAs($this->user)->get(route("restaurants.index"));
         $responseData = $response->json('data.data');
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -40,7 +47,7 @@ class RestaurantListTest extends TestCase
         ]);
         $response->assertJsonCount(15, 'data.data');
         foreach ($responseData as $restaurant) {
-            $this->assertEquals(2, $restaurant['user_id']);
+            $this->assertEquals($this->user->id, $restaurant['user_id']);
         }
     }
 

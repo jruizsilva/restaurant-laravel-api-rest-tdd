@@ -56,6 +56,6 @@ class RestaurantController extends Controller
     {
         Gate::authorize("delete", $restaurant);
         $restaurant->delete();
-        return response()->noContent();
+        return jsonResponse();
     }
 }
