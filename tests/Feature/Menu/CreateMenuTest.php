@@ -44,7 +44,6 @@ class CreateMenuTest extends TestCase
             ->postJson(route('restaurant.menus.store', [
                 'restaurant' => $this->restaurant->id
             ]), $data);
-
         $response->assertStatus(201);
         $response->assertJsonPath("data.restaurant.id", $this->restaurant->id);
         $response->assertJsonPath("status", 201);

@@ -19,8 +19,8 @@ class RestaurantFactory extends Factory
     {
         $name = fake()->unique()->company();
         return [
-            'name' => $name . "-" . uniqid(),
-            'slug' => str()->slug($name),
+            'name' => $name,
+            'slug' => str($name)->slug() . "-" . uniqid(),
             'description' => fake()->text(100),
             'user_id' => fn() => User::factory()->create()->id,
         ];

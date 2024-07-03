@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Menu;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MenuResource;
 use App\Models\Menu;
 use App\Http\Requests\StoreMenuRequest;
 use App\Http\Requests\UpdateMenuRequest;
@@ -34,9 +35,11 @@ class MenuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Menu $menu)
+    public function show(Restaurant $restaurant, Menu $menu)
     {
-        //
+        Gate::authorize("viewMenu", $restaurant);
+        $menu = $restaurant->menus()->with("plates")->findOrFail($menu->id);
+        return jsonResponse($menu, 200);
     }
 
     /**
