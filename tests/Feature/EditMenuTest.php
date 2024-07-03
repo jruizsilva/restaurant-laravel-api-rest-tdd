@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class DeleteMenuTest extends TestCase
+class EditMenuTest extends TestCase
 {
     use RefreshDatabase;
     protected $user;
@@ -31,27 +31,37 @@ class DeleteMenuTest extends TestCase
         $this->restaurant = Restaurant::factory()->create(['user_id' => $this->user->id]);
         $this->anotherRestaurant = Restaurant::factory()->create(['user_id' => $this->anotherUser->id]);
         $this->plates = Plate::factory()->count(3)->create(['restaurant_id' => $this->restaurant->id]);
-        $this->anotherPlates = Plate::factory()->count(3)->create(['restaurant_id' => $this->anotherRestaurant->id]);
+        $this->anotherPlates = Plate::factory()->count(1)->create(['restaurant_id' => $this->anotherRestaurant->id]);
         $this->menu = Menu::factory()->hasAttached($this->plates)->create(['restaurant_id' => $this->restaurant->id]);
         $this->anotherMenu = Menu::factory()->hasAttached($this->anotherPlates)->create(['restaurant_id' => $this->anotherRestaurant->id]);
     }
 
     #[Test]
-    public function an_authenticated_user_can_delete_a_menu_of_his_restaurant(): void
+    public function an_authenticated_user_can_edit_a_menu_of_his_restaurant(): void
     {
-        $this->withExceptionHandling();
-        $response = $this->actingAs($this->user)->deleteJson(route('restaurant.menus.destroy', [
+        $data = [
+            'name' => 'Menu name editado',
+            'description' => 'Descripcion del menu editado',
+            'plates' => $this->anotherPlates->pluck('id')->toArray(),
+        ];
+
+        $response = $this->actingAs($this->user)->putJson(route('restaurant.menus.update', [
             'restaurant' => $this->restaurant->id,
             'menu' => $this->menu->id
-        ]));
+        ]), $data);
 
         $response->assertStatus(200);
+        $response->assertJsonCount(1, "data.plates");
         $response->assertJsonPath("status", 200);
-        $this->assertDatabaseMissing('menus', [
-            'id' => $this->menu->id
+        $this->assertDatabaseHas('menus', [
+            'name' => 'Menu name editado',
+            'description' => 'Descripcion del menu editado',
         ]);
-        $this->assertDatabaseMissing('menu_plate', [
-            'menu_id' => $this->menu->id
-        ]);
+        $this->plates->each(function ($plate) {
+            $this->assertDatabaseMissing('menu_plate', [
+                'plate_id' => $plate->id,
+                'menu_id' => $this->menu->id,
+            ]);
+        });
     }
 }

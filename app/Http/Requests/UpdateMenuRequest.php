@@ -11,7 +11,7 @@ class UpdateMenuRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateMenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => "required",
+            "description" => "required",
+            "plates" => "array",
+            "plates.*" => "exists:plates,id"
         ];
     }
 }

@@ -24,7 +24,8 @@ class StoreMenuRequest extends FormRequest
         return [
             "name" => "required",
             "description" => "required",
-            "plates" => "required|array",
+            "plates" => "array",
+            "plates.*" => "exists:plates,id"
         ];
     }
 }
