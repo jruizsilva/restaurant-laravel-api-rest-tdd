@@ -4,8 +4,6 @@ namespace Tests\Feature\Restaurant;
 
 use App\Models\Restaurant;
 use App\Models\User;
-use Database\Seeders\RestaurantSeeder;
-use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,11 +12,33 @@ use Tests\TestCase;
 class EditRestaurantTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $user;
+    protected $anotherUser;
+    protected $restaurant;
+    protected $anotherRestaurant;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
-        $this->seed(RestaurantSeeder::class);
+        $this->user = User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
+        $this->anotherUser = User::factory()->create([
+            'name' => 'Another',
+            'last_name' => 'User',
+            'email' => 'another@example.com',
+        ]);
+        $this->restaurant = Restaurant::factory()->create([
+            'user_id' => $this->user->id,
+            'name' => "Restaurant 1",
+        ]);
+        $this->anotherRestaurant = Restaurant::factory()->create([
+            'user_id' => $this->anotherUser->id,
+            'name' => "Restaurant 2",
+        ]);
     }
     #[Test]
     public function an_user_can_update_their_restaurant(): void
@@ -27,7 +47,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'New Restaurant Name',
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             'name' => 'New Restaurant Name',
@@ -46,7 +68,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'New Restaurant Name',
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $responseData = $response->json('data');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['slug']]);
@@ -61,7 +85,9 @@ class EditRestaurantTest extends TestCase
             'description' => 'New Restaurant Description',
         ];
         $restaurant = Restaurant::find(1);
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $responseData = $response->json('data');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['slug']]);
@@ -75,7 +101,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'New Restaurant Name',
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/11', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->anotherRestaurant->id
+        ]), $data);
         $response->assertStatus(401);
         $this->assertDatabaseMissing('restaurants', [
             'name' => 'New Restaurant Name',
@@ -90,7 +118,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'New Restaurant Name',
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->putJson('api/v1/restaurants/1', $data);
+        $response = $this->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $this->assertDatabaseMissing('restaurants', [
             'name' => 'New Restaurant Name',
             'description' => 'New Restaurant Description',
@@ -105,7 +135,9 @@ class EditRestaurantTest extends TestCase
             'name' => '',
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
     }
@@ -117,7 +149,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'New Restaurant Name',
             'description' => '',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('description');
     }
@@ -129,7 +163,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'abc',
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
     }
@@ -141,7 +177,9 @@ class EditRestaurantTest extends TestCase
             'name' => 'New Restaurant Name',
             'description' => 'abc',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('description');
     }
@@ -153,7 +191,9 @@ class EditRestaurantTest extends TestCase
             'name' => str_repeat('a', 101),
             'description' => 'New Restaurant Description',
         ];
-        $response = $this->actingAs(User::find(1))->putJson('api/v1/restaurants/1', $data);
+        $response = $this->actingAs($this->user)->putJson(route('restaurants.update', [
+            'restaurant' => $this->restaurant->id
+        ]), $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
     }

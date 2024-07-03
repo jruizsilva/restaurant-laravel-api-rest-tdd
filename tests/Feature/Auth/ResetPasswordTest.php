@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use App\Notifications\ResetPasswordNotification;
-use Database\Seeders\UserSeeder;
 use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,7 +20,11 @@ class ResetPasswordTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
+        User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
     }
 
     private function sendResetPasswordEmailAndSetAttributes()

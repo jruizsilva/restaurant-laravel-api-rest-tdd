@@ -13,11 +13,15 @@ use Tests\TestCase;
 class UpdateUserDataTest extends TestCase
 {
     use RefreshDatabase;
-
+    protected $user;
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
+        $this->user = User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
     }
     #[Test]
     public function an_authenticated_user_can_modify_their_data(): void
@@ -26,7 +30,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Name changed',
             'last_name' => 'Last Name changed'
         ];
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
         $responseData = $response->json('data');
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -50,7 +54,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Example',
             'last_name' => 'Example',
         ];
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
         $response->assertStatus(200);
         $this->assertDatabaseMissing('users', [
             'email' => 'newemail@gmail.com'
@@ -64,7 +68,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Example',
             'last_name' => 'Example',
         ];
-        $user = User::find(1);
+        $user = $this->user;
         $response = $this->apiAs($user, 'put', 'api/v1/profile', $data);
         $response->assertStatus(200);
         $this->assertFalse(Hash::check('newpassword', $user->password));
@@ -76,7 +80,7 @@ class UpdateUserDataTest extends TestCase
         $data = [
             'last_name' => 'Last Name 1',
         ];
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
     }
@@ -87,7 +91,7 @@ class UpdateUserDataTest extends TestCase
         $data = [
             'name' => 'Name 1',
         ];
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('last_name');
     }
@@ -100,7 +104,7 @@ class UpdateUserDataTest extends TestCase
             'name' => '1'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
@@ -113,7 +117,7 @@ class UpdateUserDataTest extends TestCase
             'name' => 'Test',
             'last_name' => '1'
         ];
-        $response = $this->apiAs(User::find(1), 'put', 'api/v1/profile', $data);
+        $response = $this->apiAs($this->user, 'put', 'api/v1/profile', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('last_name');
     }

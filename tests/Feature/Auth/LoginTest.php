@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
-use Database\Seeders\UserSeeder;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -12,10 +12,16 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $user;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
+        $this->user = User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
     }
     #[Test]
     public function an_existing_user_can_login(): void

@@ -3,10 +3,8 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Database\Seeders\UserSeeder;
 use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -14,10 +12,16 @@ class UpdatePasswordTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $user;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
+        $this->user = User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
     }
 
     #[Test]
@@ -29,7 +33,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'newpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(200);
         $this->assertTrue(Hash::check('newpassword', auth()->user()->password));
     }
@@ -43,7 +47,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'newpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('current_password');
     }
@@ -57,7 +61,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'wrongpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('password_confirmation');
     }
@@ -70,7 +74,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'newpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('current_password');
     }
@@ -83,7 +87,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'newpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('password');
     }
@@ -96,7 +100,7 @@ class UpdatePasswordTest extends TestCase
             'password' => 'newpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('password_confirmation');
     }
@@ -110,7 +114,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'new'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('password');
     }
@@ -124,7 +128,7 @@ class UpdatePasswordTest extends TestCase
             'password_confirmation' => 'newpassword'
         ];
 
-        $response = $this->apiAs(User::find(1), 'put', '/api/v1/password', $data);
+        $response = $this->apiAs($this->user, 'put', '/api/v1/password', $data);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('current_password');
     }

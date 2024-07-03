@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
-use Database\Seeders\UserSeeder;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,7 +15,11 @@ class RegisterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(UserSeeder::class);
+        User::factory()->create([
+            'name' => 'Example',
+            'last_name' => 'Example',
+            'email' => 'example@example.com',
+        ]);
     }
 
     #[Test]
@@ -24,8 +28,8 @@ class RegisterTest extends TestCase
         $credentials = [
             'email' => 'email@email.com',
             'password' => 'password',
-            'name' => 'Name 1',
-            'last_name' => 'Last Name 1',
+            'name' => 'Name 2',
+            'last_name' => 'Last Name 2',
         ];
 
         $response = $this->postJson('api/v1/users', $credentials);
@@ -33,16 +37,15 @@ class RegisterTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonPath('data', [
             ...$responseData,
-            'id' => 3,
             'email' => 'email@email.com',
-            'name' => 'Name 1',
-            'last_name' => 'Last Name 1',
+            'name' => 'Name 2',
+            'last_name' => 'Last Name 2',
         ]);
-        $this->assertDatabaseCount('users', 3);
+        $this->assertDatabaseCount('users', 2);
         $this->assertDatabaseHas('users', [
             'email' => 'email@email.com',
-            'name' => 'Name 1',
-            'last_name' => 'Last Name 1',
+            'name' => 'Name 2',
+            'last_name' => 'Last Name 2',
         ]);
     }
 
@@ -58,7 +61,7 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/users', $credentials);
         $response->assertStatus(201);
-        $this->assertDatabaseCount('users', 3);
+        $this->assertDatabaseCount('users', 2);
         $response = $this->postJson('api/v1/login', [
             'email' => $credentials['email'],
             'password' => $credentials['password'],
