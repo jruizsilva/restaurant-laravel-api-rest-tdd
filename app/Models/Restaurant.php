@@ -2,14 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSearch;
 
     protected $guarded = [];
+
+    protected function searchFields()
+    {
+        return [
+            'name',
+            'description',
+        ];
+    }
 
     public function user()
     {

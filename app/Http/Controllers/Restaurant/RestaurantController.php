@@ -16,8 +16,9 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        $search = request('search');
-        $restaurants = Auth::user()->restaurants()->whereAny(["name", "description"], "like", "%$search%")->paginate();
+        $search = request("search") ?? "";
+        // $restaurants = Auth::user()->restaurants()->whereAny(["name", "description"], "like", "%$search%")->paginate();
+        $restaurants = Auth::user()->restaurants()->search($search)->paginate();
         return jsonResponse($restaurants);
     }
 
