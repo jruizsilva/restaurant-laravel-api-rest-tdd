@@ -12,7 +12,7 @@ class Restaurant extends Model
 
     protected $guarded = [];
 
-    protected function searchFields()
+    private function searchFields()
     {
         return [
             'name',

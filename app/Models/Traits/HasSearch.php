@@ -11,7 +11,7 @@ trait HasSearch
         return [];
     }
 
-    public function scopeSearch(Builder $builder, string $search = ""): Builder
+    public function scopeSearch(Builder $builder, string $search = "")
     {
         if ($search === "") {
             return $builder;
@@ -23,6 +23,5 @@ trait HasSearch
                 $builder->whereAny($fields, "like", "%$word%");
             }
         });
-        return $builder;
     }
 }
