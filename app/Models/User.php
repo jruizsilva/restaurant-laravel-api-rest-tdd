@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Roles;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -74,7 +76,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [
             'roles' => $this->getRoleNames(),
-            'permissions' => $this->getAllPermissions()->pluck('name')->toArray()
+            'permissions' => $this->hasRole(Roles::OWNER->name) ?
+                Permission::select('name')->get()->pluck('name')->toArray() :
+                $this->getAllPermissions()->pluck('name')->toArray()
         ];
     }
 }
