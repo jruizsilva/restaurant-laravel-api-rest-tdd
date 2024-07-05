@@ -13,7 +13,7 @@ class NotFoundTest extends TestCase
     public function throw_not_found_exception_when_route_does_not_exist(): void
     {
         $response = $this->get('/sdasdsadasdsa');
-        dd($response->json());
-        $response->assertStatus(200);
+        $response->assertStatus(404);
+        $response->assertJsonPath("status", 404);
     }
 }

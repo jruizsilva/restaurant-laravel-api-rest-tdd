@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,6 +16,7 @@ class RegisterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->seed(RoleSeeder::class);
         User::factory()->create([
             'name' => 'Example',
             'last_name' => 'Example',
