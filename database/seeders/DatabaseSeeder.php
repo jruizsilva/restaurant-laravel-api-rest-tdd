@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\Roles;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,5 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
         ]);
+        $user = User::factory()->create([
+            'name' => 'Owner',
+            'email' => 'owner@gmail.com'
+        ]);
+        $user->assignRole(Roles::OWNER->name);
     }
 }
