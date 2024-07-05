@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Menu;
 
 use App\Models\Menu;
 use App\Models\Plate;

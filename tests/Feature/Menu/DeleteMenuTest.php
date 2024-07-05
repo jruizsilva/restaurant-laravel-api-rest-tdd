@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Menu;
 
 use App\Models\Menu;
 use App\Models\Plate;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ShowMenuTest extends TestCase
+class DeleteMenuTest extends TestCase
 {
     use RefreshDatabase;
     protected $user;
@@ -37,28 +37,21 @@ class ShowMenuTest extends TestCase
     }
 
     #[Test]
-    public function an_authenticated_user_can_see_a_menu_of_his_restaurant(): void
+    public function an_authenticated_user_can_delete_a_menu_of_his_restaurant(): void
     {
-        $response = $this->actingAs($this->user)->getJson(route('restaurant.menus.show', [
+        $this->withExceptionHandling();
+        $response = $this->actingAs($this->user)->deleteJson(route('restaurant.menus.destroy', [
             'restaurant' => $this->restaurant->id,
-            'menu' => $this->menu->id,
+            'menu' => $this->menu->id
         ]));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'data' => [
-                'id',
-                'name',
-                'description',
-                'plates' => [
-                    [
-                        'id',
-                        'name',
-                        'description',
-                        'price',
-                    ],
-                ],
-            ]
+        $response->assertJsonPath("status", 200);
+        $this->assertDatabaseMissing('menus', [
+            'id' => $this->menu->id
+        ]);
+        $this->assertDatabaseMissing('menu_plate', [
+            'menu_id' => $this->menu->id
         ]);
     }
 }

@@ -17,7 +17,9 @@ class RestaurantController extends Controller
     public function index()
     {
         $search = request("search") ?? "";
-        $restaurants = Auth::user()->restaurants()->search($search)->paginate();
+        $sortBy = request("sortBy") ?? "id";
+        $sortDirection = request("sortDirection") ?? "asc";
+        $restaurants = Auth::user()->restaurants()->search($search)->sort($sortBy, $sortDirection)->paginate();
         return jsonResponse($restaurants);
     }
 
